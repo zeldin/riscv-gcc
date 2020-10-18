@@ -69,9 +69,16 @@ extern const char *riscv_expand_arch (int argc, const char **argv);
 %{mbig-endian} \
 %(subtarget_asm_spec)"
 
+#ifdef TARGET_BIG_ENDIAN_DEFAULT
+#define ENDIAN_SPEC "-mbig-endian"
+#else
+#define ENDIAN_SPEC "-mlittle-endian"
+#endif
+
 #undef DRIVER_SELF_SPECS
 #define DRIVER_SELF_SPECS \
-"%{march=*:-march=%:riscv_expand_arch(%*)}"
+"%{march=*:-march=%:riscv_expand_arch(%*)}" \
+" %{!mbig-endian:%{!mlittle-endian:" ENDIAN_SPEC "}}" \
 
 #define TARGET_DEFAULT_CMODEL CM_MEDLOW
 
